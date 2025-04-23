@@ -22,7 +22,10 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('HORAS VOAE')),
+      appBar: AppBar(
+        title: Text('HORAS VOAE'),
+        backgroundColor: const Color.fromARGB(255, 202, 225, 255),
+      ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,

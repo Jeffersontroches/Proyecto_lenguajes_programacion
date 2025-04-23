@@ -8,6 +8,7 @@ class Publicaciones {
   int cupos;
   DateTime fecha;
   String area;
+  String userId;
 
   Publicaciones({
     this.id,
@@ -17,6 +18,7 @@ class Publicaciones {
     required this.descripcion,
     required this.cupos,
     required this.fecha,
+    required this.userId,
   });
 
   factory Publicaciones.fromJson(Map<String, dynamic> json) {
@@ -28,6 +30,7 @@ class Publicaciones {
       descripcion: json['descripcion'],
       cupos: json['cupos'],
       fecha: (json['fecha'] as Timestamp).toDate(),
+      userId: json['userId'],
     );
   }
 
@@ -39,6 +42,7 @@ class Publicaciones {
       'descripcion': descripcion,
       'cupos': cupos,
       'fecha': fecha,
+      'userId': userId,
     };
   }
 }

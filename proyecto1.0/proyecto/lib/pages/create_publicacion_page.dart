@@ -145,7 +145,6 @@ class _CreateMoviePageState extends State<CreateMoviePage> {
                   child: AbsorbPointer(
                     child: CustomTextField(
                       focusNode: FocusNode(),
-
                       controller: fechaController,
                       hint: 'Selecciona Fecha',
                     ),
@@ -197,9 +196,7 @@ class _CreateMoviePageState extends State<CreateMoviePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // Verificar que la fecha esté seleccionada
           if (selectedDateTime != null && horas.text.isNotEmpty) {
-            // Aseguramos que la fecha esté en el formato correcto (zona horaria local)
             final finalDateTime = DateTime(
               selectedDateTime!.year,
               selectedDateTime!.month,
@@ -208,26 +205,37 @@ class _CreateMoviePageState extends State<CreateMoviePage> {
               DateTime.now().minute,
             );
 
-            Publicaciones data = Publicaciones(
-              id: null,
-              titulo: titulo.text,
-              descripcion: descripcion.text,
-              cupos: int.parse(cupos.text),
-              fecha: finalDateTime, // Usamos la fecha en la zona horaria local
-              horas: int.parse(horas.text),
-              area: selectedArea,
-            );
+            final userId = FirebaseAuth.instance.currentUser?.uid;
 
-            final newDoc = await FirebaseFirestore.instance
-                .collection('publicacion')
-                .add(data.toFirestoreDataBase());
+            if (userId != null) {
+              Publicaciones data = Publicaciones(
+                id: null,
+                titulo: titulo.text,
+                descripcion: descripcion.text,
+                cupos: int.parse(cupos.text),
+                fecha: finalDateTime,
+                horas: int.parse(horas.text),
+                area: selectedArea,
+                userId: userId,
+              );
 
-            if (!context.mounted) return;
+              final newDoc = await FirebaseFirestore.instance
+                  .collection('publicacion')
+                  .add(data.toFirestoreDataBase());
 
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('publicación ${data.titulo} creada')),
-            );
+              if (!context.mounted) return;
+
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('publicación ${data.titulo} creada')),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('No se pudo obtener el ID del usuario'),
+                ),
+              );
+            }
           }
         },
         child: const Icon(Icons.save),

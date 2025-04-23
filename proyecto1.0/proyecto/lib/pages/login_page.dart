@@ -1,12 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/services.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Bloquear la orientación de la pantalla en modo vertical
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -31,7 +38,6 @@ class LoginPage extends StatelessWidget {
                   height: 300,
                   fit: BoxFit.fill,
                 ),
-
                 const SizedBox(height: 40),
                 const Text(
                   'Bienvenido',

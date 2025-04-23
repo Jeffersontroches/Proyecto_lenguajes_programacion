@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "824636445876",
+    "project_id": "horasvoae",
+    "storage_bucket": "horasvoae.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824636445876:android:d80a168590af9b1eb773e1",
+        "android_client_info": {
+          "package_name": "com.example.proyecto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALXYC8YPnvGxTmf-P9iY147FwsEGbt-Lo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:proyecto/pages/home_Page.dart';
 import 'package:proyecto/pages/suscrito_Page.dart';
 import 'package:proyecto/pages/profile_page.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 
 class BottomNavScreen extends StatefulWidget {
+  const BottomNavScreen({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _BottomNavScreenState createState() => _BottomNavScreenState();
 }
 
@@ -25,26 +27,14 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     });
   }
 
-  // Método para comprobar la conectividad
-  Future<void> _checkConnectivity() async {
-    final ConnectivityResult result =
-        (await Connectivity().checkConnectivity()) as ConnectivityResult;
-    setState(() {
-      _isOnline = result != ConnectivityResult.none;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    // Comprobamos la conectividad cuando se inicializa el estado
-    _checkConnectivity();
   }
 
   @override
   Widget build(BuildContext context) {
     if (!_isOnline) {
-      // Si no hay conexión, mostramos un mensaje o una pantalla alternativa
       return Scaffold(
         appBar: AppBar(
           title: Row(
@@ -56,13 +46,6 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
             ],
           ),
           backgroundColor: const Color.fromARGB(255, 202, 225, 255),
-        ),
-        body: const Center(
-          child: Text(
-            'No tienes conexión a Internet. Por favor, verifica tu conexión.',
-            style: TextStyle(fontSize: 18, color: Colors.red),
-            textAlign: TextAlign.center,
-          ),
         ),
       );
     }
@@ -90,7 +73,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
             icon: Icon(Icons.book_sharp),
             label: 'Mis inscripciones',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
       ),
     );

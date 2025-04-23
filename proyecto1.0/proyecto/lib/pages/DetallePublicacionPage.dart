@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:proyecto/models/Publicacion.dart';
 import 'package:proyecto/pages/ListadoInscritosPage.dart';
 import 'package:proyecto/pages/create_publicacion_page.dart';
+import 'package:proyecto/widgets/actionButon.dart';
+import 'package:proyecto/widgets/infoCard.dart';
 
 class DetallePublicacionPage extends StatefulWidget {
   final Publicaciones publicacion;
@@ -17,6 +19,7 @@ class DetallePublicacionPage extends StatefulWidget {
 class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
   bool _inscrito = false;
   int _inscritosCount = 0;
+  int _totalInscripciones = 0;
 
   @override
   void initState() {
@@ -44,10 +47,17 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
             .where('idPublicacion', isEqualTo: widget.publicacion.id)
             .get();
 
+    final todasInscripciones =
+        await firestore
+            .collection('inscritos')
+            .where('userId', isEqualTo: user.uid)
+            .get();
+
     if (mounted) {
       setState(() {
         _inscrito = query.docs.isNotEmpty;
         _inscritosCount = inscritos.docs.length;
+        _totalInscripciones = todasInscripciones.docs.length;
       });
     }
   }
@@ -185,7 +195,7 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
 
             ElevatedButton.icon(
               onPressed:
-                  (_inscrito || cuposLlenos)
+                  (_inscrito || cuposLlenos || _totalInscripciones >= 10)
                       ? null
                       : () async {
                         if (user != null) {
@@ -203,6 +213,7 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
                             setState(() {
                               _inscrito = true;
                               _inscritosCount++;
+                              _totalInscripciones++;
                             });
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -216,11 +227,17 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
               label: Text(
                 _inscrito
                     ? 'Ya inscrito'
-                    : (cuposLlenos ? 'Cupos llenos' : 'Inscribirse'),
+                    : (cuposLlenos
+                        ? 'Cupos llenos'
+                        : (_totalInscripciones >= 10
+                            ? 'Máximo de 10 inscripciones'
+                            : 'Inscribirse')),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor:
-                    (_inscrito || cuposLlenos) ? Colors.grey : Colors.blue,
+                    (_inscrito || cuposLlenos || _totalInscripciones >= 10)
+                        ? Colors.grey
+                        : Colors.blue,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
@@ -233,64 +250,6 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class InfoCard extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const InfoCard({super.key, required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '$label: ',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            Expanded(child: Text(value, style: const TextStyle(fontSize: 16))),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ActionButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  final IconData icon;
-  final String label;
-  final Color color;
-
-  const ActionButton({
-    super.key,
-    required this.onPressed,
-    required this.icon,
-    required this.label,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      icon: Icon(icon),
-      label: Text(label),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }

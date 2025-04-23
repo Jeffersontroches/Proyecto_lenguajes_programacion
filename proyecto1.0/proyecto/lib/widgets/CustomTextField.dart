@@ -6,6 +6,7 @@ class CustomTextField extends StatelessWidget {
   final String hint;
   final TextInputType inputType;
   final bool isObscure;
+  final IconData? icon;
 
   const CustomTextField({
     required this.controller,
@@ -13,29 +14,41 @@ class CustomTextField extends StatelessWidget {
     required this.hint,
     this.inputType = TextInputType.text,
     this.isObscure = false,
-    Key? key,
-  }) : super(key: key);
+    this.icon,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      focusNode: focusNode,
-      obscureText: isObscure,
-      keyboardType: inputType,
-      style: const TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: TextStyle(color: Colors.white70),
-        filled: true,
-        fillColor: Colors.blue.shade900.withOpacity(0.2),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: Colors.blue.shade200),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: Colors.blue.shade100, width: 2),
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4), // menos espacio
+      decoration: BoxDecoration(
+        color: const Color(0xFFF2F2F2), // blanco suave
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        obscureText: isObscure,
+        keyboardType: inputType,
+        style: const TextStyle(color: Color(0xFF1F2937), fontSize: 16),
+        decoration: InputDecoration(
+          prefixIcon:
+              icon != null ? Icon(icon, color: Color(0xFF6B7280)) : null,
+          hintText: hint,
+          hintStyle: const TextStyle(color: Color(0xFF9CA3AF)),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 16,
+            horizontal: 20,
+          ),
         ),
       ),
     );

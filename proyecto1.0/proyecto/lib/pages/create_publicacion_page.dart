@@ -103,6 +103,11 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.publicacion != null;
+    final labelStyle = TextStyle(
+      // ignore: deprecated_member_use
+      color: Colors.white.withOpacity(0.9),
+      fontSize: 16,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -128,18 +133,23 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text('Título', style: labelStyle),
                 CustomTextField(
                   controller: titulo,
                   focusNode: tituloFocus,
                   hint: 'Título',
                 ),
                 const SizedBox(height: 10),
+
+                Text('Descripción', style: labelStyle),
                 CustomTextField(
                   controller: descripcion,
                   focusNode: descripcionFocus,
                   hint: 'Descripción',
                 ),
                 const SizedBox(height: 10),
+
+                Text('Cupos disponibles', style: labelStyle),
                 CustomTextField(
                   controller: cupos,
                   focusNode: cuposFocus,
@@ -147,6 +157,8 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
                   inputType: TextInputType.number,
                 ),
                 const SizedBox(height: 10),
+
+                Text('Horas a asignar', style: labelStyle),
                 CustomTextField(
                   controller: horas,
                   focusNode: horasFocus,
@@ -154,6 +166,8 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
                   inputType: TextInputType.number,
                 ),
                 const SizedBox(height: 10),
+
+                Text('Fecha de la actividad', style: labelStyle),
                 GestureDetector(
                   onTap: () => _selectDateTime(context),
                   child: AbsorbPointer(
@@ -165,10 +179,8 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'Seleccione área',
-                  style: TextStyle(color: Colors.white70, fontSize: 16),
-                ),
+
+                Text('Seleccione área', style: labelStyle),
                 const SizedBox(height: 6),
                 SizedBox(
                   width: double.infinity,
@@ -176,6 +188,7 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
+                      // ignore: deprecated_member_use
                       color: Colors.blue.shade900.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(color: Colors.blue.shade200),

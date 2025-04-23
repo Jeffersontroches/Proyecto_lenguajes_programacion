@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => BottomNavScreen(),
         '/login': (context) => LoginPage(),
-        '/publicacion': (context) => CreateMoviePage(),
+        '/publicacion': (context) => CreatePublicacionPage(),
       },
     );
   }

@@ -1,20 +1,20 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:proyecto/models/Publicacion.dart';
 import 'package:proyecto/widgets/CustomTextField.dart';
 
-class CreateMoviePage extends StatefulWidget {
-  const CreateMoviePage({super.key});
+class CreatePublicacionPage extends StatefulWidget {
+  final Publicaciones? publicacion;
+
+  const CreatePublicacionPage({super.key, this.publicacion});
 
   @override
-  State<CreateMoviePage> createState() => _CreateMoviePageState();
+  State<CreatePublicacionPage> createState() => CreatePublicacionPageState();
 }
 
-class _CreateMoviePageState extends State<CreateMoviePage> {
+class CreatePublicacionPageState extends State<CreatePublicacionPage> {
   final titulo = TextEditingController(text: 'Ingrese título');
   final descripcion = TextEditingController(text: 'ingrese descripcion');
   final cupos = TextEditingController(text: 'cupos Disponibles');
@@ -39,6 +39,19 @@ class _CreateMoviePageState extends State<CreateMoviePage> {
   @override
   void initState() {
     super.initState();
+
+    final pub = widget.publicacion;
+    if (pub != null) {
+      titulo.text = pub.titulo;
+      descripcion.text = pub.descripcion;
+      cupos.text = pub.cupos.toString();
+      horas.text = pub.horas.toString();
+      selectedDateTime = pub.fecha;
+      fechaController.text =
+          '${pub.fecha.day.toString().padLeft(2, '0')}/${pub.fecha.month.toString().padLeft(2, '0')}/${pub.fecha.year}';
+      selectedArea = pub.area;
+    }
+
     tituloFocus.addListener(() {
       if (tituloFocus.hasFocus && titulo.text == 'Ingrese título') {
         titulo.clear();
@@ -90,10 +103,12 @@ class _CreateMoviePageState extends State<CreateMoviePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = widget.publicacion != null;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 202, 225, 255),
-        title: const Text('Crear Película'),
+        title: Text(isEditing ? 'Editar Publicación' : 'Crear Publicación'),
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -208,8 +223,17 @@ class _CreateMoviePageState extends State<CreateMoviePage> {
             final userId = FirebaseAuth.instance.currentUser?.uid;
 
             if (userId != null) {
+              final docRef =
+                  isEditing
+                      ? FirebaseFirestore.instance
+                          .collection('publicacion')
+                          .doc(widget.publicacion!.id)
+                      : FirebaseFirestore.instance
+                          .collection('publicacion')
+                          .doc();
+
               Publicaciones data = Publicaciones(
-                id: null,
+                id: docRef.id,
                 titulo: titulo.text,
                 descripcion: descripcion.text,
                 cupos: int.parse(cupos.text),
@@ -219,15 +243,20 @@ class _CreateMoviePageState extends State<CreateMoviePage> {
                 userId: userId,
               );
 
-              final newDoc = await FirebaseFirestore.instance
-                  .collection('publicacion')
-                  .add(data.toFirestoreDataBase());
+              await docRef.set(data.toFirestoreDataBase());
 
               if (!context.mounted) return;
 
-              Navigator.pop(context);
+              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('publicación ${data.titulo} creada')),
+                SnackBar(
+                  content: Text(
+                    isEditing
+                        ? 'Publicación actualizada'
+                        : 'Publicación creada',
+                  ),
+                ),
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(

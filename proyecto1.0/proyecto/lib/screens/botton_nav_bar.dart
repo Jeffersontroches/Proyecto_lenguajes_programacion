@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto/pages/home_Page.dart';
-import 'package:proyecto/pages/horas_page.dart';
+import 'package:proyecto/pages/suscrito_Page.dart';
 import 'package:proyecto/pages/profile_page.dart';
 
 class BottomNavScreen extends StatefulWidget {
@@ -11,7 +11,11 @@ class BottomNavScreen extends StatefulWidget {
 class _BottomNavScreenState extends State<BottomNavScreen> {
   int _selectedIndex = 0;
 
-  static final List<Widget> _pages = [HomePage(), HorasPage(), ProfilePage()];
+  static final List<Widget> _pages = [
+    HomePage(),
+    SuscritoPage(),
+    ProfilePage(),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {

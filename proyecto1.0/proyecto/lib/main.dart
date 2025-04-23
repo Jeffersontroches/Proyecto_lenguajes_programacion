@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto/pages/home_Page.dart';
+import 'package:proyecto/pages/create_publicacion_page.dart';
 import 'package:proyecto/pages/login_page.dart';
 import 'package:proyecto/screens/botton_nav_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,11 +17,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Horas voae',
-      initialRoute: '/login',
+      initialRoute: '/',
       //home: LoginPage(),
       routes: {
         '/': (context) => BottomNavScreen(),
         '/login': (context) => LoginPage(),
+        '/publicacion': (context) => CreateMoviePage(),
       },
     );
   }

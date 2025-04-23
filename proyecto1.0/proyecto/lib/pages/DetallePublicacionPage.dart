@@ -55,7 +55,6 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
   Future<void> eliminarPublicacion() async {
     final firestore = FirebaseFirestore.instance;
 
-    // Eliminar los registros de inscritos para esta publicación
     final inscritosQuery =
         await firestore
             .collection('inscritos')
@@ -66,7 +65,6 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
       await doc.reference.delete();
     }
 
-    // Eliminar la publicación
     await firestore
         .collection('publicacion')
         .doc(widget.publicacion.id)
@@ -77,7 +75,6 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
     final String currentUserId = user?.uid ?? '';
-
     final bool cuposLlenos = _inscritosCount >= widget.publicacion.cupos;
 
     return Scaffold(
@@ -92,8 +89,6 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-
-            // Info cards
             InfoCard(
               label: 'Descripción',
               value: widget.publicacion.descripcion,
@@ -112,18 +107,7 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
             const SizedBox(height: 10),
 
             if (widget.publicacion.userId == currentUserId) ...[
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+              ActionButton(
                 onPressed: () async {
                   final confirm = await showDialog<bool>(
                     context: context,
@@ -145,10 +129,8 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
                           ],
                         ),
                   );
-
                   if (confirm == true) {
                     await eliminarPublicacion();
-
                     if (context.mounted) {
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -159,11 +141,12 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
                     }
                   }
                 },
-                icon: const Icon(Icons.delete),
-                label: const Text('Eliminar'),
+                icon: Icons.delete,
+                label: 'Eliminar',
+                color: Colors.red,
               ),
               const SizedBox(height: 10),
-              ElevatedButton.icon(
+              ActionButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -175,22 +158,12 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
                     ),
                   );
                 },
-                icon: const Icon(Icons.list),
-                label: const Text('Listado de inscritos'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+                icon: Icons.list,
+                label: 'Listado de inscritos',
+                color: Colors.green,
               ),
               const SizedBox(height: 10),
-              ElevatedButton.icon(
+              ActionButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -202,25 +175,11 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
                     ),
                   );
                 },
-                icon: const Icon(Icons.edit),
-                label: const Text('Editar'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+                icon: Icons.edit,
+                label: 'Editar',
+                color: Colors.orange,
               ),
             ],
-
-            const SizedBox(height: 16),
-
-            const SizedBox(height: 10),
 
             const SizedBox(height: 16),
 
@@ -257,9 +216,7 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
               label: Text(
                 _inscrito
                     ? 'Ya inscrito'
-                    : cuposLlenos
-                    ? 'Cupos llenos'
-                    : 'Inscribirse',
+                    : (cuposLlenos ? 'Cupos llenos' : 'Inscribirse'),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor:
@@ -289,34 +246,52 @@ class InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 5,
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '$label: ',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                Expanded(
-                  child: Text(value, style: const TextStyle(fontSize: 16)),
-                ),
-              ],
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '$label: ',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
-          ),
+            Expanded(child: Text(value, style: const TextStyle(fontSize: 16))),
+          ],
         ),
-        const SizedBox(height: 12),
-      ],
+      ),
+    );
+  }
+}
+
+class ActionButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  final IconData icon;
+  final String label;
+  final Color color;
+
+  const ActionButton({
+    super.key,
+    required this.onPressed,
+    required this.icon,
+    required this.label,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
     );
   }
 }

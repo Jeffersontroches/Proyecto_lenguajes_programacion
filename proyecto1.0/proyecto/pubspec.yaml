@@ -39,10 +39,9 @@ dependencies:
   cloud_firestore: ^5.6.5
   firebase_auth: ^5.5.2
   google_sign_in: ^6.3.0
-  firebase_storage: ^12.4.5
-  image_picker: ^1.1.2
-  flutter_datetime_picker: ^1.5.1
   intl: ^0.20.2
+  connectivity_plus: ^6.1.4
+
   
 
 dev_dependencies:

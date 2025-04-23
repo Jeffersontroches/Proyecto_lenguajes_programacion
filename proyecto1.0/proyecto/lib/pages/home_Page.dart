@@ -12,6 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _isOnline = true;
+
   @override
   void initState() {
     super.initState();
@@ -28,6 +30,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_isOnline) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Home')),
+        body: const Center(
+          child: Text(
+            'No tienes conexión a Internet. Por favor, verifica tu conexión.',
+            style: TextStyle(fontSize: 18, color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(

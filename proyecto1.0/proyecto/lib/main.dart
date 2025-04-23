@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto/pages/home_Page.dart';
+import 'package:proyecto/pages/login_page.dart';
 import 'package:proyecto/screens/botton_nav_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -13,6 +15,14 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Bottom Nav Demo', home: BottomNavScreen());
+    return MaterialApp(
+      title: 'Horas voae',
+      initialRoute: '/login',
+      //home: LoginPage(),
+      routes: {
+        '/': (context) => BottomNavScreen(),
+        '/login': (context) => LoginPage(),
+      },
+    );
   }
 }

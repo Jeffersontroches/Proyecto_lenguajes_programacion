@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto/pages/create_publicacion_page.dart';
-import 'package:proyecto/pages/login_page.dart';
-import 'package:proyecto/screens/botton_nav_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:proyecto/routes/routes.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,14 +15,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Horas voae',
       initialRoute: '/',
-      //home: LoginPage(),
-      routes: {
-        '/': (context) => BottomNavScreen(),
-        '/login': (context) => LoginPage(),
-        '/publicacion': (context) => CreatePublicacionPage(),
-      },
+      routes: appRoutes,
     );
   }
 }

@@ -76,7 +76,7 @@ class _SuscritoPageState extends State<SuscritoPage> {
               child: Text(
                 "Mis Inscripciones",
                 style: TextStyle(
-                  color: Color.fromARGB(255, 0, 0, 0), // Tono gris suave
+                  color: Color.fromARGB(255, 0, 0, 0),
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
@@ -95,9 +95,7 @@ class _SuscritoPageState extends State<SuscritoPage> {
                     return const Center(
                       child: Text(
                         "No estás inscrito en ninguna publicación.",
-                        style: TextStyle(
-                          color: Color(0xFFB0BEC5),
-                        ), // Tono gris suave
+                        style: TextStyle(color: Color(0xFFB0BEC5)),
                       ),
                     );
                   }
@@ -110,7 +108,7 @@ class _SuscritoPageState extends State<SuscritoPage> {
                       final pub = publicaciones[index];
 
                       return Card(
-                        color: const Color(0xFFF5F5F5), // Gris muy claro
+                        color: const Color(0xFFF5F5F5),
                         margin: const EdgeInsets.all(10),
                         child: ListTile(
                           title: Text(pub['titulo']),

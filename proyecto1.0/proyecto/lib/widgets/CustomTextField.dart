@@ -21,15 +21,15 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4), // menos espacio
+      margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFFF2F2F2), // blanco suave
-        borderRadius: BorderRadius.circular(20),
+        color: const Color(0xFFF5F7FB),
+        borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -41,13 +41,13 @@ class CustomTextField extends StatelessWidget {
         style: const TextStyle(color: Color(0xFF1F2937), fontSize: 16),
         decoration: InputDecoration(
           prefixIcon:
-              icon != null ? Icon(icon, color: Color(0xFF6B7280)) : null,
+              icon != null ? Icon(icon, color: const Color(0xFF6B7280)) : null,
           hintText: hint,
-          hintStyle: const TextStyle(color: Color(0xFF9CA3AF)),
+          hintStyle: const TextStyle(color: Color(0xFF6B7280), fontSize: 16),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
-            vertical: 16,
-            horizontal: 20,
+            vertical: 18,
+            horizontal: 22,
           ),
         ),
       ),

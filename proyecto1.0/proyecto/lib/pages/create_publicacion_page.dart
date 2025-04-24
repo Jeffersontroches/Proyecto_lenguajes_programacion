@@ -104,7 +104,6 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
   Widget build(BuildContext context) {
     final isEditing = widget.publicacion != null;
     final labelStyle = TextStyle(
-      // ignore: deprecated_member_use
       color: Colors.white.withOpacity(0.9),
       fontSize: 16,
     );
@@ -129,7 +128,7 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
         ),
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(19.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -139,7 +138,7 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
                   focusNode: tituloFocus,
                   hint: 'Título',
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
 
                 Text('Descripción', style: labelStyle),
                 CustomTextField(
@@ -147,7 +146,7 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
                   focusNode: descripcionFocus,
                   hint: 'Descripción',
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
 
                 Text('Cupos disponibles', style: labelStyle),
                 CustomTextField(
@@ -156,7 +155,7 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
                   hint: 'Cupos',
                   inputType: TextInputType.number,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
 
                 Text('Horas a asignar', style: labelStyle),
                 CustomTextField(
@@ -165,7 +164,7 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
                   hint: 'Horas',
                   inputType: TextInputType.number,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
 
                 Text('Fecha de la actividad', style: labelStyle),
                 GestureDetector(
@@ -178,7 +177,7 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
 
                 Text('Seleccione área', style: labelStyle),
                 const SizedBox(height: 6),
@@ -188,7 +187,6 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
-                      // ignore: deprecated_member_use
                       color: Colors.blue.shade900.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(color: Colors.blue.shade200),
@@ -215,7 +213,7 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
               ],
             ),
           ),
@@ -223,60 +221,89 @@ class CreatePublicacionPageState extends State<CreatePublicacionPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          if (selectedDateTime != null && horas.text.isNotEmpty) {
-            final finalDateTime = DateTime(
-              selectedDateTime!.year,
-              selectedDateTime!.month,
-              selectedDateTime!.day,
-              DateTime.now().hour,
-              DateTime.now().minute,
+          if (selectedDateTime == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Por favor selecciona una fecha.')),
+            );
+            return;
+          }
+
+          if (cupos.text.isEmpty || horas.text.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Por favor completa los campos de cupos y horas.',
+                ),
+              ),
+            );
+            return;
+          }
+
+          final cuposValue = int.tryParse(cupos.text);
+          final horasValue = int.tryParse(horas.text);
+
+          if (cuposValue == null || horasValue == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Los campos de cupos y horas solo deben contener números.',
+                ),
+              ),
+            );
+            return;
+          }
+
+          final finalDateTime = DateTime(
+            selectedDateTime!.year,
+            selectedDateTime!.month,
+            selectedDateTime!.day,
+            DateTime.now().hour,
+            DateTime.now().minute,
+          );
+
+          final userId = FirebaseAuth.instance.currentUser?.uid;
+
+          if (userId != null) {
+            final isEditing = widget.publicacion != null;
+            final docRef =
+                isEditing
+                    ? FirebaseFirestore.instance
+                        .collection('publicacion')
+                        .doc(widget.publicacion!.id)
+                    : FirebaseFirestore.instance
+                        .collection('publicacion')
+                        .doc();
+
+            Publicaciones data = Publicaciones(
+              id: docRef.id,
+              titulo: titulo.text,
+              descripcion: descripcion.text,
+              cupos: cuposValue,
+              fecha: finalDateTime,
+              horas: horasValue,
+              area: selectedArea,
+              userId: userId,
             );
 
-            final userId = FirebaseAuth.instance.currentUser?.uid;
+            await docRef.set(data.toFirestoreDataBase());
 
-            if (userId != null) {
-              final docRef =
-                  isEditing
-                      ? FirebaseFirestore.instance
-                          .collection('publicacion')
-                          .doc(widget.publicacion!.id)
-                      : FirebaseFirestore.instance
-                          .collection('publicacion')
-                          .doc();
+            if (!context.mounted) return;
 
-              Publicaciones data = Publicaciones(
-                id: docRef.id,
-                titulo: titulo.text,
-                descripcion: descripcion.text,
-                cupos: int.parse(cupos.text),
-                fecha: finalDateTime,
-                horas: int.parse(horas.text),
-                area: selectedArea,
-                userId: userId,
-              );
+            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
 
-              await docRef.set(data.toFirestoreDataBase());
-
-              if (!context.mounted) return;
-
-              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    isEditing
-                        ? 'Publicación actualizada'
-                        : 'Publicación creada',
-                  ),
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  isEditing ? 'Publicación actualizada' : 'Publicación creada',
                 ),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('No se pudo obtener el ID del usuario'),
-                ),
-              );
-            }
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('No se pudo obtener el ID del usuario'),
+              ),
+            );
           }
         },
         child: const Icon(Icons.save),

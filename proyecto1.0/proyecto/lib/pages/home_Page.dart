@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto/models/Publicacion.dart';
-import 'package:proyecto/pages/DetallePublicacionPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _isOnline = true;
+  final bool _isOnline = true;
 
   @override
   void initState() {
@@ -20,6 +19,7 @@ class _HomePageState extends State<HomePage> {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
         if (!context.mounted) return;
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pushReplacementNamed('/login');
         print('User is currently signed out!');
       } else {
@@ -103,13 +103,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder:
-                              (_) => DetallePublicacionPage(
-                                publicacion: publicacion,
-                              ),
-                        ),
+                      Navigator.of(context).pushNamed(
+                        '/detallePublicacion',
+                        arguments: publicacion,
                       );
                     },
                     child: Card(

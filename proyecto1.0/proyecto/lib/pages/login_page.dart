@@ -8,7 +8,6 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Bloquear la orientación de la pantalla en modo vertical
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -20,11 +19,7 @@ class LoginPage extends StatelessWidget {
           gradient: RadialGradient(
             center: Alignment(0, -0.5),
             radius: 1.2,
-            colors: [
-              Color(0xFF4169E1), // Royal Blue
-              Color(0xFF6A5ACD), // Slate Blue
-              Color(0xFF1E1E2C), // Deep background
-            ],
+            colors: [Color(0xFF4169E1), Color(0xFF6A5ACD), Color(0xFF1E1E2C)],
           ),
         ),
         child: SafeArea(

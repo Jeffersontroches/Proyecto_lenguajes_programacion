@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto/models/Publicacion.dart';
-import 'package:proyecto/pages/ListadoInscritosPage.dart';
-import 'package:proyecto/pages/create_publicacion_page.dart';
 import 'package:proyecto/widgets/actionButon.dart';
 import 'package:proyecto/widgets/infoCard.dart';
 
@@ -13,10 +11,10 @@ class DetallePublicacionPage extends StatefulWidget {
   const DetallePublicacionPage({super.key, required this.publicacion});
 
   @override
-  State<DetallePublicacionPage> createState() => _DetallePublicacionPageState();
+  State<DetallePublicacionPage> createState() => DetallePublicacionPageState();
 }
 
-class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
+class DetallePublicacionPageState extends State<DetallePublicacionPage> {
   bool _inscrito = false;
   int _inscritosCount = 0;
   int _totalInscripciones = 0;
@@ -158,14 +156,10 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
               const SizedBox(height: 10),
               ActionButton(
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushNamed(
                     context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) => ListadoInscritosPage(
-                            publicacionId: widget.publicacion.id!,
-                          ),
-                    ),
+                    '/listadoInscritos',
+                    arguments: widget.publicacion.id!,
                   );
                 },
                 icon: Icons.list,
@@ -175,14 +169,10 @@ class _DetallePublicacionPageState extends State<DetallePublicacionPage> {
               const SizedBox(height: 10),
               ActionButton(
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushNamed(
                     context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) => CreatePublicacionPage(
-                            publicacion: widget.publicacion,
-                          ),
-                    ),
+                    '/crearPublicacion',
+                    arguments: widget.publicacion,
                   );
                 },
                 icon: Icons.edit,

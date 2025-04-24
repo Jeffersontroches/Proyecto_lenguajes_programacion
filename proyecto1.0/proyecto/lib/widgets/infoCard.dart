@@ -11,20 +11,20 @@ class InfoCard extends StatelessWidget {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 5,
-      child: Padding(
+      child: Container(
+        width: double.infinity,
         padding: const EdgeInsets.all(20.0),
-        child: Row(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '$label: ',
+              '$label:',
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
-            Expanded(
-              child: Text(
-                value.isNotEmpty ? value : 'No disponible',
-                style: const TextStyle(fontSize: 16),
-              ),
+            const SizedBox(height: 8),
+            Text(
+              value.isNotEmpty ? value : 'No disponible',
+              style: const TextStyle(fontSize: 16),
             ),
           ],
         ),
